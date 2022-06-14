@@ -26,7 +26,7 @@ func Unpack(source string) (string, error) {
 			isPreviousNumber = false
 		}
 	}
-	var result = ""
+	var result string
 	for i, char := range runes { // Unpacking validated string
 		if unicode.IsDigit(char) {
 			continue
