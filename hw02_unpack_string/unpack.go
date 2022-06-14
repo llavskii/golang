@@ -9,13 +9,25 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(source string) (string, error) {
-	notValidString := checkPackedString(source)
-	if notValidString != nil {
-		return source, notValidString
+	runes := []rune(source)
+	for i, char := range runes { // Check that first char is not number
+		if i == 0 && unicode.IsDigit(char) {
+			return source, ErrInvalidString
+		}
+	}
+	var isPreviousNumber bool
+	for _, char := range runes { // Search sequence of numbers
+		if unicode.IsDigit(char) {
+			if isPreviousNumber {
+				return source, ErrInvalidString
+			}
+			isPreviousNumber = true
+		} else {
+			isPreviousNumber = false
+		}
 	}
 	var result = ""
-	runes := []rune(source)
-	for i, char := range runes {
+	for i, char := range runes { // Unpacking validated string
 		if unicode.IsDigit(char) {
 			continue
 		}
@@ -27,29 +39,5 @@ func Unpack(source string) (string, error) {
 		}
 		result += strings.Repeat(string(char), repeat)
 	}
-
 	return result, nil
-}
-
-func checkPackedString(source string) error {
-	if len(source) == 0 { // Is empty string?
-		return nil
-	}
-	for i, char := range source { // Check that first char is not number
-		if i == 0 && unicode.IsDigit(char) {
-			return ErrInvalidString
-		}
-	}
-	var isPreviousNumber bool
-	for _, char := range source { // Search sequence of numbers
-		if unicode.IsDigit(char) {
-			if isPreviousNumber {
-				return ErrInvalidString
-			}
-			isPreviousNumber = true
-		} else {
-			isPreviousNumber = false
-		}
-	}
-	return nil
 }
