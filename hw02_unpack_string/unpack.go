@@ -10,8 +10,8 @@ var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(source string) (string, error) {
 	runes := []rune(source)
-	for i, char := range runes { // Check that first char is not number
-		if i == 0 && unicode.IsDigit(char) {
+	for i, char := range runes { // Check that: first char is not number and string contains only digits or letters
+		if (i == 0 && unicode.IsDigit(char)) || (!unicode.IsDigit(char) && !unicode.IsLetter(char)) {
 			return source, ErrInvalidString
 		}
 	}
