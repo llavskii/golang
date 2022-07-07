@@ -26,7 +26,7 @@ func Unpack(source string) (string, error) {
 			isPreviousNumber = false
 		}
 	}
-	var result string
+	resultBuilder := strings.Builder{}
 	for i, char := range runes { // Unpacking validated string
 		if unicode.IsDigit(char) {
 			continue
@@ -37,7 +37,7 @@ func Unpack(source string) (string, error) {
 		} else {
 			repeat = int(runes[i+1] - '0')
 		}
-		result += strings.Repeat(string(char), repeat)
+		resultBuilder.WriteString(strings.Repeat(string(char), repeat))
 	}
-	return result, nil
+	return resultBuilder.String(), nil
 }
