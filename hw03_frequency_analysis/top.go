@@ -3,12 +3,16 @@ package hw03frequencyanalysis
 import (
 	"regexp"
 	"sort"
+	"strings"
 )
 
 var splitRegex = regexp.MustCompile(`\s+`) // regexp for split source string
 
 func Top10(source string) []string {
 	if len(source) == 0 {
+		return nil
+	}
+	if strings.TrimSpace(source) == "" {
 		return nil
 	}
 	splitted := splitRegex.Split(source, -1) // split source
