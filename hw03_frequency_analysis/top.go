@@ -6,6 +6,7 @@ import (
 )
 
 var splitRegex = regexp.MustCompile(`\s+`) // regexp for split source string
+
 func Top10(source string) []string {
 	if len(source) == 0 {
 		return nil
