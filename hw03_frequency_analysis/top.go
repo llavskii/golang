@@ -13,7 +13,7 @@ func Top10(source string) []string {
 	}
 	splitted := splitRegex.Split(source, -1) // split source
 	countDict := map[string]int{}            // map for count of words
-	var max = 0                              // variable for get max count
+	var max int                              // variable for get max count
 	for _, s := range splitted {
 		count := countDict[s] + 1
 		countDict[s] = count // counting this word
