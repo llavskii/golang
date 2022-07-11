@@ -27,7 +27,7 @@ func Top10(source string) []string {
 		value, ok := wordsGroupedByCount[counter]
 		if !ok { // if map dos't contain this words counter
 			wordsGroupedByCount[counter] = append([]string{}, word)
-		} else { //else append word to slice
+		} else { // else append word to slice
 			wordsGroupedByCount[counter] = append(value, word)
 		}
 	}
