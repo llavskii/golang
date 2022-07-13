@@ -44,6 +44,22 @@ var text = `Как видите, он  спускается  по  лестни�
 		В этот вечер...`
 
 func TestTop10(t *testing.T) {
+	t.Run("ignore sequence of spaces", func(t *testing.T) {
+		expected := []string{
+			"a",
+			"b",
+			"c",
+			"d",
+			"e",
+			"f",
+			"o",
+			"p",
+			"q",
+			"r",
+		}
+		require.Equal(t, expected, Top10("a b c d e f          o p q r"))
+	})
+
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
 	})
