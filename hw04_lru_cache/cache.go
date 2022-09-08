@@ -6,6 +6,7 @@ type Cache interface {
 	Set(key Key, value interface{}) bool
 	Get(key Key) (interface{}, bool)
 	Clear()
+	IsEmpty() bool
 }
 
 type lruCache struct {
@@ -50,6 +51,10 @@ func (c *lruCache) Clear() {
 type cacheItem struct {
 	key   Key
 	value interface{}
+}
+
+func (c *lruCache) IsEmpty() bool {
+	return c.queue.Len() == 0 && len(c.items) == 0
 }
 
 func NewCache(capacity int) Cache {

@@ -1,12 +1,11 @@
 package hw04lrucache
 
 import (
+	"github.com/stretchr/testify/require"
 	"math/rand"
 	"strconv"
 	"sync"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestCache(t *testing.T) {
@@ -50,7 +49,13 @@ func TestCache(t *testing.T) {
 	})
 
 	t.Run("purge logic", func(t *testing.T) {
-		// Write me
+		c := NewCache(10)
+		c.Set("123", 123)
+		val, ok := c.Get("123")
+		require.True(t, ok)
+		require.Equal(t, 123, val)
+		c.Clear()
+		require.True(t, c.IsEmpty())
 	})
 }
 
