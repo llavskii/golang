@@ -17,8 +17,90 @@ type ListItem struct {
 }
 
 type list struct {
-	List // Remove me after realization.
-	// Place your code here.
+	counter int
+	first   *ListItem
+	last    *ListItem
+}
+
+func (l *list) Len() int {
+	return l.counter
+}
+
+func (l *list) Front() *ListItem {
+	return l.first
+}
+
+func (l *list) Back() *ListItem {
+	return l.last
+}
+
+func (l *list) PushFront(v interface{}) *ListItem {
+	first := &ListItem{v, l.first, nil}
+	if l.counter == 1 { // if list of one element - move first to last
+		l.last = l.first
+		l.last.Next = nil
+		l.last.Prev = first
+	} else if l.counter >= 2 { // if list of more than 1 element
+		l.first.Prev = first
+	}
+	l.first = first
+	l.counter++
+	return first
+}
+
+func (l *list) PushBack(v interface{}) *ListItem {
+	last := &ListItem{v, nil, l.last}
+	if l.first == nil {
+		l.first = last
+		l.counter++
+		return last
+	}
+	if l.last == nil {
+		l.first.Next = last
+		last.Prev = l.first
+	}
+	if l.last != nil {
+		l.last.Next = last
+	}
+	l.last = last
+	l.counter++
+	return last
+}
+
+func (l *list) Remove(i *ListItem) {
+	if i.Prev == nil { //if it is first element
+		if i.Next == nil { //and the only one
+			l.first = nil
+		} else if l.counter == 2 { //or first of a pair
+			l.first = l.last
+			l.last = nil
+			l.first.Next = nil
+			l.first.Prev = nil
+		} else { // or first of more than 2
+			l.first = i.Next
+			l.first.Prev = nil
+		}
+	} else if i.Next == nil { // if it is last element
+		if l.counter == 2 { //and last of a pair
+			l.first.Next = nil
+			l.last = nil
+		} else { //or last of more than 2 elements
+			l.last = i.Prev
+			l.last.Next = nil
+		}
+	} else { //if it is not last element and not first
+		i.Prev.Next = i.Next
+		i.Next.Prev = i.Prev
+	}
+	l.counter--
+}
+
+func (l *list) MoveToFront(i *ListItem) {
+	if i.Prev == nil { //if it is first element
+		return
+	}
+	l.Remove(i)
+	l.PushFront(i.Value)
 }
 
 func NewList() List {
