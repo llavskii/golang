@@ -69,26 +69,22 @@ func (l *list) PushBack(v interface{}) *ListItem {
 
 func (l *list) Remove(i *ListItem) {
 	switch {
-	case i.Prev == nil: // if it is first element
-		if i.Next == nil { // and the only one
-			l.first = nil
-		} else if l.counter == 2 { // or first of a pair
-			l.first = l.last
-			l.last = nil
-			l.first.Next = nil
-			l.first.Prev = nil
-		} else { // or first of more than 2
-			l.first = i.Next
-			l.first.Prev = nil
-		}
-	case i.Next == nil: // if it is last element
-		if l.counter == 2 { // and last of a pair
-			l.first.Next = nil
-			l.last = nil
-		} else { // or last of more than 2 elements
-			l.last = i.Prev
-			l.last.Next = nil
-		}
+	case i.Prev == nil && i.Next == nil: // if it is first element and the only one
+		l.first = nil
+	case i.Prev == nil && l.counter == 2: // or first of a pair
+		l.first = l.last
+		l.last = nil
+		l.first.Next = nil
+		l.first.Prev = nil
+	case i.Prev == nil && l.counter > 2: // or first of more than 2
+		l.first = i.Next
+		l.first.Prev = nil
+	case i.Next == nil && l.counter == 2: // if it is last element and last of a pair
+		l.first.Next = nil
+		l.last = nil
+	case i.Next == nil && l.counter > 2: // or last of more than 2 elements
+		l.last = i.Prev
+		l.last.Next = nil
 	default: // if it is not last element and not first
 		i.Prev.Next = i.Next
 		i.Next.Prev = i.Prev
