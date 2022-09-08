@@ -68,7 +68,8 @@ func (l *list) PushBack(v interface{}) *ListItem {
 }
 
 func (l *list) Remove(i *ListItem) {
-	if i.Prev == nil { // if it is first element
+	switch {
+	case i.Prev == nil: // if it is first element
 		if i.Next == nil { // and the only one
 			l.first = nil
 		} else if l.counter == 2 { // or first of a pair
@@ -80,7 +81,7 @@ func (l *list) Remove(i *ListItem) {
 			l.first = i.Next
 			l.first.Prev = nil
 		}
-	} else if i.Next == nil { // if it is last element
+	case i.Next == nil: // if it is last element
 		if l.counter == 2 { // and last of a pair
 			l.first.Next = nil
 			l.last = nil
@@ -88,7 +89,7 @@ func (l *list) Remove(i *ListItem) {
 			l.last = i.Prev
 			l.last.Next = nil
 		}
-	} else { // if it is not last element and not first
+	default: // if it is not last element and not first
 		i.Prev.Next = i.Next
 		i.Next.Prev = i.Prev
 	}
