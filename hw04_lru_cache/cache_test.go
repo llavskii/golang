@@ -58,7 +58,6 @@ func TestCache(t *testing.T) {
 		c.Clear()
 		require.True(t, c.IsEmpty())
 	})
-
 	t.Run("cache overflow", func(t *testing.T) {
 		c := NewCache(3)
 		c.Set("1", 1)
@@ -66,6 +65,18 @@ func TestCache(t *testing.T) {
 		c.Set("3", 3)
 		c.Set("4", 4)
 		_, ok := c.Get("1")
+		require.False(t, ok)
+	})
+	t.Run("element obsolescence", func(t *testing.T) {
+		c := NewCache(3)
+		c.Set("1", 1)
+		c.Set("2", 2)
+		c.Set("3", 3)
+		c.Get("1")
+		_, ok := c.Get("1") // after that, value for key '1' is the oldest cache element
+		require.True(t, ok)
+		c.Set("4", 4)
+		_, ok = c.Get("2")
 		require.False(t, ok)
 	})
 }
