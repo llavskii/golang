@@ -13,7 +13,7 @@ var wg sync.WaitGroup
 
 // Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
 func Run(tasks []Task, n, m int) error {
-	errCnt := 0
+	var errCnt int
 	ch := make(chan Task, len(tasks))
 	mu := sync.Mutex{}
 	for i := 0; i < n; i++ {
