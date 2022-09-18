@@ -13,6 +13,9 @@ var wg sync.WaitGroup
 
 // Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
 func Run(tasks []Task, n, m int) error {
+	if m == 0 {
+		return ErrErrorsLimitExceeded
+	}
 	var errCnt int
 	ch := make(chan Task, len(tasks))
 	mu := sync.Mutex{}
@@ -22,17 +25,17 @@ func Run(tasks []Task, n, m int) error {
 			for {
 				task, ok := <-ch
 				if !ok {
-					break // if channel is closed then break loop and goroutine finishes
+					break // if channel is closed than break loop and goroutine finishes
 				}
 				mu.Lock()
-				if errCnt == m { // if error count = limit then break loop and goroutine finishes
+				if errCnt == m { // if error count = limit than break loop and goroutine finishes
 					mu.Unlock()
 					break
 				}
 				mu.Unlock()
 				if task != nil && task() != nil { // if channel's element is not nil and returns error
 					mu.Lock()
-					if errCnt != m { // if error count != limit, then increment error counter and loop continues
+					if errCnt != m { // if error count != limit, than increment error counter and loop continues
 						errCnt++
 					}
 					mu.Unlock()
