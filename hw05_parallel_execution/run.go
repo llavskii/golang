@@ -17,7 +17,7 @@ func Run(tasks []Task, n, m int) error {
 		return ErrErrorsLimitExceeded
 	}
 	var errCnt int
-	ch := make(chan Task, len(tasks))
+	ch := make(chan Task, n)
 	mu := sync.Mutex{}
 	for i := 0; i < n; i++ {
 		wg.Add(1)
