@@ -18,7 +18,7 @@ func Run(tasks []Task, n, m int) error {
 	mu := sync.Mutex{}
 	for i := 0; i < n; i++ {
 		wg.Add(1)
-		go func(i int) {
+		go func() {
 			for {
 				mu.Lock()
 				if errCnt == m { // if error count = m, then exit
@@ -38,7 +38,7 @@ func Run(tasks []Task, n, m int) error {
 			}
 			mu.Unlock()
 			wg.Done()
-		}(i)
+		}()
 	}
 	for _, t := range tasks {
 		ch <- t
