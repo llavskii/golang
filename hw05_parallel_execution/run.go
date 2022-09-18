@@ -21,15 +21,21 @@ func Run(tasks []Task, n, m int) error {
 		go func() {
 			for {
 				task, ok := <-ch
-				if !ok || errCnt == m {
-					break // if channel is closed or error count = limit then break loop and goroutine finishes
+				if !ok {
+					break // if channel is closed then break loop and goroutine finishes
 				}
+				mu.Lock()
+				if errCnt == m { // if error count = limit then break loop and goroutine finishes
+					mu.Unlock()
+					break
+				}
+				mu.Unlock()
 				if task != nil && task() != nil { // if channel's element is not nil and returns error
-					if errCnt != m { // if error count != limit, then increment error counter and continue
-						mu.Lock()
+					mu.Lock()
+					if errCnt != m { // if error count != limit, then increment error counter and loop continues
 						errCnt++
-						mu.Unlock()
 					}
+					mu.Unlock()
 				}
 			}
 			wg.Done()
